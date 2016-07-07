@@ -9,8 +9,8 @@ var lossNumber = 0;
 var spinResult=[];
 var fruits = "";
 var winRatio = 0;
-var curr;
-var curA = 0; //current position modificator of the slot A (the one that the player sees)
+var curr; //current position modificator of a slot (the one that the player sees)
+var curA = 0; 
 var curB = 0;
 var curC = 0;
 var times = 0;
@@ -22,7 +22,7 @@ var Fruits = {
  Bar : 0,
  Bell : 0,
  Seven : 0,
- Blanks : 0
+ Blank : 0
 }
 
 
@@ -109,7 +109,7 @@ e.g. Bar - Orange - Banana */
 /* This function calculates the player's winnings, if any */
 function determineWinnings()
 {
-    if (Fruits.Blanks == 0)
+    if (Fruits.Blank == 0)
     {
         if (Fruits.Grape == 3) {
             winnings = playerBet * 10;
@@ -117,43 +117,43 @@ function determineWinnings()
         else if(Fruits.Banana == 3) {
             winnings = playerBet * 20;
         }
-        else if (Fruits[Orange] == 3) {
+        else if (Fruits.Orange == 3) {
             winnings = playerBet * 30;
         }
-        else if (Fruits[Cherry] == 3) {
+        else if (Fruits.Cherry == 3) {
             winnings = playerBet * 40;
         }
-        else if (Fruits[Bar] == 3) {
+        else if (Fruits.Bar == 3) {
             winnings = playerBet * 50;
         }
-        else if (Fruits[Bell] == 3) {
+        else if (Fruits.Bell == 3) {
             winnings = playerBet * 75;
         }
-        else if (Fruits[Seven] == 3) {
+        else if (Fruits.Seven == 3) {
             winnings = playerBet * 100;
         }
-        else if (Fruits[Grape] == 2) {
+        else if (Fruits.Grape == 2) {
             winnings = playerBet * 2;
         }
-        else if (Fruits[Banana] == 2) {
+        else if (Fruits.Banana == 2) {
             winnings = playerBet * 2;
         }
-        else if (Fruits[Orange] == 2) {
+        else if (Fruits.Orange == 2) {
             winnings = playerBet * 3;
         }
-        else if (Fruits[Cherry] == 2) {
+        else if (Fruits.Cherry == 2) {
             winnings = playerBet * 4;
         }
-        else if (Fruits[Bar] == 2) {
+        else if (Fruits.Bar == 2) {
             winnings = playerBet * 5;
         }
-        else if (Fruits[Bell] == 2) {
+        else if (Fruits.Bell == 2) {
             winnings = playerBet * 10;
         }
-        else if (Fruits[Seven] == 2) {
+        else if (Fruits.Seven == 2) {
             winnings = playerBet * 20;
         }
-        else if (Fruits[Seven] == 1) {
+        else if (Fruits.Seven == 1) {
             winnings = playerBet * 5;
         }
         else {
@@ -174,10 +174,25 @@ function calcWinnings() {
     var fruitA = getFruit($("#slots_a .wrapper"), curA);
     var fruitB = getFruit($("#slots_b .wrapper"), curB);
     var fruitC = getFruit($("#slots_c .wrapper"), curC);
+    var fruits = [fruitA, fruitB, fruitC];
 
+    Fruits.Blank = countFruits("Blank", fruits);
+    Fruits.Bar = countFruits("Bar", fruits);
+    Fruits.Banana = countFruits("Banana", fruits);
+    Fruits.Bell = countFruits("Bell", fruits);
+    Fruits.Cherry = countFruits("Cherry", fruits);
+    Fruits.Grape = countFruits("Grape", fruits);
+    Fruits.Orange = countFruits("Orange", fruits);
+    Fruits.Seven = countFruits("Seven", fruits);
 
-    $('#test2').text(fruitA);
+    $('#test2').text(Fruits.Bar);
 
+}
+
+function countFruits(fruit,fruitarray) {
+    var count = 0;
+    $.each(fruitarray, function(i,v) { if (v.indexOf(fruit)>=0) count++; });
+    return count;
 }
 
 function getFruit(fruit, cur) {
@@ -219,7 +234,7 @@ function addSlots(jquery_obj){
 	for(var i = 0; i < 15; i++){
 		var rand_pos = Math.floor(Math.random()*spinResult.length);
         var id = spinResult[rand_pos];
-			jquery_obj.append("<div id="+id+i+" class='slot'>"+spinResult[rand_pos]+"</div>");
+			jquery_obj.append("<div id="+id+i+" class='slot'>"+id+"</div>");
 	}
 } 
 
@@ -267,7 +282,7 @@ function moveSlots(jquery_obj){
         curr = currSlot;
 		time += Math.round(Math.random()*1000);
 	    jquery_obj.stop(true,true);
-        var rand = Math.floor(Math.random() * 10) + 1;
+        var rand = Math.floor(Math.random() * 10) + 4;
 		var marginTop = parseInt(jquery_obj.css("margin-top"), 10);
         var checkMarg = marginTop - (rand * 100);
         if(checkMarg >= -1406) { //margin-top goes beyond the size of our wrapper at this size
@@ -291,7 +306,6 @@ function moveSlots(jquery_obj){
         saveCurSlot(jquery_obj);
         $('#test').text(rand);
         calcWinnings();
-
 }
 
 /* When the player clicks the spin button the game kicks off */
@@ -315,8 +329,8 @@ $("#spinButton").click(function () {
     else if (playerBet <= playerMoney) {
 
        spinSlots();
-        fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
-        $("div#result>p").text(fruits);
+        //fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
+        //$("div#result>p").text(fruits);
         determineWinnings();
         turn++;
         showPlayerStats();
