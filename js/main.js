@@ -191,6 +191,12 @@ function calcWinnings() {
     $('#test').text("Orange: "+Fruits.Orange);
 }
 
+function clearCurr() {
+    curA = 0;
+    curB = 0;
+    curC = 0;
+}
+
 function countFruits(fruit,fruitarray) {
     var count = 0;
     $.each(fruitarray, function(i,v) { if (v.indexOf(fruit)>=0) count++; });
@@ -284,7 +290,6 @@ function moveSlots(jquery_obj){
         
         curr = (-(marginTop/100))-0.06;
         saveCurSlot(jquery_obj);
-        calcWinnings();
 }
 
 $('#resetButton').click(function(){
@@ -311,7 +316,8 @@ $("#spinButton").click(function () {
     }
     else if (playerBet <= playerMoney) {
 
-       spinSlots();
+        spinSlots();
+        calcWinnings();
         //fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
         //$("div#result>p").text(fruits);
         determineWinnings();
