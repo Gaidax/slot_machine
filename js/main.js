@@ -185,8 +185,10 @@ function calcWinnings() {
     Fruits.Orange = countFruits("Orange", fruits);
     Fruits.Seven = countFruits("Seven", fruits);
 
-    $('#test2').text(Fruits.Bar);
-
+    $('#test2').text("Cherry: "+Fruits.Cherry+" Banana:"+
+    + Fruits.Banana+" Bar: "+ Fruits.Bar+" Bell "+ Fruits.Bell+
+    " Seven: "+Fruits.Seven);
+    $('#test').text("Orange: "+Fruits.Orange);
 }
 
 function countFruits(fruit,fruitarray) {
@@ -231,39 +233,13 @@ function addSlots(jquery_obj){
         for(var fruit in Fruits) {
             spinResult.push(fruit);
         }
-	for(var i = 0; i < 15; i++){
+	for(var i = 0; i < 17; i++){
 		var rand_pos = Math.floor(Math.random()*spinResult.length);
         var id = spinResult[rand_pos];
-			jquery_obj.append("<div id="+id+i+" class='slot'>"+id+"</div>");
+			jquery_obj.append("<div id="+id+i+" class='slot'><img src=img/"+id+".jpg></div>");
+            //src="+$id +" - for <img> tag
 	}
 } 
-
-function incrCur(rand) {
-    if(curr==0){
-        curr=rand;
-    } else {
-        curr+=rand;
-    }
-}
-
-function decrCur(rand) {
-    if(curr==0){
-        curr=rand;
-    } else {
-        curr -= rand;
-    }
-}
-
-function checkCurSlot(jquery_obj){
-    switch(jquery_obj.selector.substring(7,8)){
-        case "a" :
-        return curA;
-        case "b" :
-        return curB;
-        case "c" :
-        return curC;
-    }
-}
 
 function saveCurSlot(jquery_obj) {
         switch(jquery_obj.selector.substring(7,8)){
@@ -276,37 +252,44 @@ function saveCurSlot(jquery_obj) {
     }
 }
 
+function calcMargin(marginTop) {
+        var rand = Math.floor(Math.random() * 9) + 4;
+        var changeMarg = marginTop - (rand * 100); //this variable is to change the margin-top of the wrapper object (it moves slots that are inside)   
+   
+        if(changeMarg <= -1406) {//margin-top goes beyond the size of our wrapper at this size
+           changeMarg = marginTop + (rand * 100);
+            if(changeMarg >= -206){
+               changeMarg = calcMargin(marginTop);
+            } 
+
+            return changeMarg;
+            } else {
+
+               return changeMarg;
+            }
+}
+
 function moveSlots(jquery_obj){
 		var time = 6500;
-        var currSlot = checkCurSlot(jquery_obj);
-        curr = currSlot;
 		time += Math.round(Math.random()*1000);
 	    jquery_obj.stop(true,true);
-        var rand = Math.floor(Math.random() * 10) + 4;
-		var marginTop = parseInt(jquery_obj.css("margin-top"), 10);
-        var checkMarg = marginTop - (rand * 100);
-        if(checkMarg >= -1406) { //margin-top goes beyond the size of our wrapper at this size
-            marginTop = checkMarg; //this variable is to change the margin-top of the wrapper object (it moves slots that are inside) 
-            incrCur(rand);
-} else {
-            checkMarg = marginTop + (rand * 100); 
-            if(checkMarg >= 0){
-               checkMarg = marginTop - (rand * 100);
-               incrCur(rand);
-            } else {
-                decrCur(rand);
-            }
-
-            marginTop = checkMarg;
-    }
+        
+		var marginTop = parseInt(jquery_obj.css("margin-top"), 10);//algorythm uses current margin-top of the wrapper object
+        marginTop = calcMargin(marginTop);
+        
 
         jquery_obj.animate( //"spin"" slots with easing.js animation 
 		{"margin-top":marginTop+"px"},//changes margin-top
 		{'duration' : time, 'easing' : "easeOutElastic"});
+        
+        curr = (-(marginTop/100))-0.06;
         saveCurSlot(jquery_obj);
-        $('#test').text(rand);
         calcWinnings();
 }
+
+$('#resetButton').click(function(){
+    resetAll();
+});
 
 /* When the player clicks the spin button the game kicks off */
 $("#spinButton").click(function () {
