@@ -1,4 +1,13 @@
-﻿/// <reference path="jquery.js" />
+﻿//****************************************************************************
+//main.js
+//Author: Vasyl Milchevskyi
+//Last Modified by: Vasyl Milchevskyi
+//Description: This is a main script for a slotmachine
+//Last Modified: 7/11/2016
+//****************************************************************************
+
+/// <reference path="jquery.js" />
+
 var playerMoney = 1000;
 var winnings = 0;
 var jackpot = 5000;
@@ -36,7 +45,13 @@ function showPlayerStats()
     $("#playerTurn").text("Turn: " + turn);
     $("#playerWins").text("Wins: " + winNumber);
     $("#playerLosses").text("Losses: " + lossNumber);
-    $("#playerWinRatio").text("Win Ratio: " + (winRatio * 100).toFixed(2) + "%");
+    var winR = (winRatio * 100).toFixed(2);
+    if(isNaN(winR)){
+        $("#playerWinRatio").text("Win Ratio: " + 0.00 + "%");
+    } else {
+        $("#playerWinRatio").text("Win Ratio: " + winR + "%");
+    }
+    
 }
 
 /* Utility function to reset all fruit tallies */
@@ -61,6 +76,8 @@ function resetAll() {
     winNumber = 0;
     lossNumber = 0;
     winRatio = 0;
+    $('#playerStats').hide().fadeIn('fast');
+    showPlayerStats();
 }
 
 
@@ -101,9 +118,6 @@ function checkRange(value, lowerBounds, upperBounds) {
         return !value;
     }
 }
-
-/* When this function is called it determines the betLine results.
-e.g. Bar - Orange - Banana */
 
 
 /* This function calculates the player's winnings, if any */
@@ -170,6 +184,9 @@ function determineWinnings()
     
 }
 
+/* When this function is called it determines results.
+e.g. Bar - Orange - Banana */
+
 function calcWinnings() {
     var fruitA = getFruit($("#slots_a .wrapper"), curA);
     var fruitB = getFruit($("#slots_b .wrapper"), curB);
@@ -185,10 +202,10 @@ function calcWinnings() {
     Fruits.Orange = countFruits("Orange", fruits);
     Fruits.Seven = countFruits("Seven", fruits);
 
-    $('#test2').text("Cherry: "+Fruits.Cherry+" Banana:"+
-    + Fruits.Banana+" Bar: "+ Fruits.Bar+" Bell "+ Fruits.Bell+
-    " Seven: "+Fruits.Seven);
-    $('#test').text("Orange: "+Fruits.Orange);
+    $('#test2').text("Blanks: "+Fruits.Blank+" Oranges: "+Fruits.Orange+" Cherries: "+Fruits.Cherry+" Bananas:"+
+    + Fruits.Banana+" Bars: "+ Fruits.Bar+" Bells "+ Fruits.Bell+" Grapes: "+Fruits.Grape+
+    " Sevens: "+Fruits.Seven);
+    
 }
 
 function clearCurr() {
@@ -197,9 +214,9 @@ function clearCurr() {
     curC = 0;
 }
 
-function countFruits(fruit,fruitarray) {
+function countFruits(cur_fruit,fruitarray) {
     var count = 0;
-    $.each(fruitarray, function(i,v) { if (v.indexOf(fruit)>=0) count++; });
+    $.each(fruitarray, function(i,v) { if (v.indexOf(cur_fruit)>=0) count++; });
     return count;
 }
 
@@ -207,9 +224,9 @@ function getFruit(fruit, cur) {
     fruit = fruit.html();
     var ind = fruit.indexOf(cur);
     if (ind >= 0){
-       fruit = fruit.substring(ind-6,ind+2);
+       fruit = fruit.substring(ind-6,ind+2);  
+       return fruit;
     }
-    return fruit;
 }
 
 $(document).ready(
@@ -234,7 +251,7 @@ function clearSlots() {
     $(".slot").remove();
 }
 
-//add 15 slots (slot divs to slots class) to spin them
+//add 17 slots (slot divs to slots class) with images to "spin"" them
 function addSlots(jquery_obj){
         for(var fruit in Fruits) {
             spinResult.push(fruit);
@@ -258,6 +275,7 @@ function saveCurSlot(jquery_obj) {
     }
 }
 
+//class that determines the margin-top that won't go beyond existing objects 
 function calcMargin(marginTop) {
         var rand = Math.floor(Math.random() * 9) + 4;
         var changeMarg = marginTop - (rand * 100); //this variable is to change the margin-top of the wrapper object (it moves slots that are inside)   
@@ -275,12 +293,13 @@ function calcMargin(marginTop) {
             }
 }
 
+//function that animates the change of margin-top property
 function moveSlots(jquery_obj){
 		var time = 6500;
 		time += Math.round(Math.random()*1000);
 	    jquery_obj.stop(true,true);
         
-		var marginTop = parseInt(jquery_obj.css("margin-top"), 10);//algorythm uses current margin-top of the wrapper object
+		var marginTop = parseInt(jquery_obj.css("margin-top"), 10);//algorithm uses current margin-top of the wrapper object
         marginTop = calcMargin(marginTop);
         
 
@@ -288,7 +307,7 @@ function moveSlots(jquery_obj){
 		{"margin-top":marginTop+"px"},//changes margin-top
 		{'duration' : time, 'easing' : "easeOutElastic"});
         
-        curr = (-(marginTop/100))-0.06;
+        curr = (-(Math.round(marginTop/100)));
         saveCurSlot(jquery_obj);
 }
 
@@ -318,8 +337,6 @@ $("#spinButton").click(function () {
 
         spinSlots();
         calcWinnings();
-        //fruits = spinResult[0] + " - " + spinResult[1] + " - " + spinResult[2];
-        //$("div#result>p").text(fruits);
         determineWinnings();
         turn++;
         showPlayerStats();

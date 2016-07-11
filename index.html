@@ -5,13 +5,13 @@
     <title>Slot Machine</title>
     <!-- CSS Section -->
     <link href="css/main.css" rel="stylesheet" />
+    <link href='https://fonts.googleapis.com/css?family=Pacifico' rel='stylesheet' type='text/css'>
 </head>
 <body>
     <div>
         <h1>Slot Machine</h1>
         <div>
-            <h2>Player Statistics</h2>
-            <hr />
+
             <ul id="playerStats">
                 <li id="jackpot">Jackpot: 500</li>
                 <li id="playerMoney">Player Money: 1000</li>
@@ -20,23 +20,18 @@
                 <li id="playerLosses">Losses: 0</li>
                 <li id="playerWinRatio">Win Ratio: 0%</li>
             </ul>
-            <hr />
         </div>
 
         <div id="betEntry">
 
             <p>Place Your Bet Here</p>
             <input id="playerBet" name="points" value="10">
-            <hr />
         </div>
     </div>
 
     <div id="result">
-        <h2>Spin Result</h2>
-        <hr />
         <p></p>
     </div>
-    <hr />
     <div id="winOrLose">
         <p></p>
     </div>
@@ -44,7 +39,7 @@
 <div id ="test2"></div>
 <div id="slot-machine" >
 
-    <img src = "img/slot-machine.png">
+<img id="slotimg" src = "img/slot-machine.png">
 <div id="reels">
 <div class="slots"  id="slots_a">
 	<div class="wrapper" ></div>

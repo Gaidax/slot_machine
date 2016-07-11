@@ -1,31 +1,55 @@
-﻿ul#playerStats {
+ul#playerStats {
     list-style-type: none;
-    padding: 0;
-    margin: 5px;
+     margin-left: auto;
+    margin-right: auto;
+    width: 10em;
+    font-family: 'Pacifico', cursive;
+    font-size: 120%;
+
 }
 
+#betEntry{
+       margin-left: auto;
+    margin-right: auto;
+    width: 10em
+}
 
 body{
-background-color:white;
 padding:0px;
 margin:0px;
 }
 
 #slotmachine {
-	position: relative;
+  position: relative
+}
+
+#slotimg {
+	position: absolute;
+	display: block;
+	/*top: 360px;
+  left: 490px;*/
+  top: 30%;
+  left: 42%;
 }
 
 #reels {
 	position: absolute;
-	   top: 560px;
-   left: 340px; 
+/*top: 398px;
+   left: 510px;*/
+     top: 32%;
+  left: 42%; 
 }
 
 .slots {
 	overflow:hidden;
 	width:100px;
 	height:100px;
-	border:1px solid cadetblue;
+  padding: 2px;
+		border-top: 3px dotted #000;
+	border-bottom: 3px dotted #000;
+	box-shadow: inset 0 -1px 0 0 #000, inset 0 1px 0 0 #000, 0 1px 0 0 #000, 0 -1px 0 0 #000;
+	margin-bottom: 1px;
+  background-color: 	#EEE8AA;
 	float:left;
 }
 
